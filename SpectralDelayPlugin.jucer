@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="TyJOUv" name="SpectralDelayPlugin" projectType="audioplug"
+              version="1.0.0" juceLinkage="amalg_multi" bundleIdentifier="com.yourcompany.SpectralDelayPlugin"
+              buildVST="1" buildRTAS="0" buildAU="0" pluginName="Spectral Delay"
+              pluginDesc="Uses filters to divide a signal into different spectral regions and delay them relative to each other"
+              pluginManufacturer="Goochtastic Technologies" pluginManufacturerCode="ANUS"
+              pluginCode="POOP" pluginChannelConfigs="{1, 1}" pluginIsSynth="0"
+              pluginWantsMidiIn="0" pluginProducesMidiOut="0" pluginSilenceInIsSilenceOut="1"
+              pluginTailLength="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="SpectralDelayPluginAU"
+              pluginAUViewClass="SpectralDelayPluginAU_V1" pluginRTASCategory=""
+              jucerVersion="3.0.0">
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX" objCExtraSuffix="S4vBfi" juceFolder="..\..\DEV Libraries\JUCE"
+               vstFolder="~/SDKs/vstsdk2.4">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="SpectralDelayPlugin"
+                       osxSDK="default" osxCompatibility="default" osxArchitecture="default"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="2" targetName="SpectralDelayPlugin"
+                       osxSDK="default" osxCompatibility="default" osxArchitecture="default"/>
+      </CONFIGURATIONS>
+    </XCODE_MAC>
+    <XCODE_IPHONE targetFolder="Builds/iOS" objCExtraSuffix="LF8ZWN" juceFolder="..\..\DEV Libraries\JUCE"
+                  vstFolder="~/SDKs/vstsdk2.4">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="SpectralDelayPlugin"
+                       osxSDK="default" osxCompatibility="default" osxArchitecture="default"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="2" targetName="SpectralDelayPlugin"
+                       osxSDK="default" osxCompatibility="default" osxArchitecture="default"/>
+      </CONFIGURATIONS>
+    </XCODE_IPHONE>
+    <VS2005 targetFolder="Builds/VisualStudio2005" libraryType="1" juceFolder="..\..\DEV Libraries\JUCE"
+            vstFolder="c:\DEV Libraries\vstsdk2.4">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="SpectralDelayPlugin"
+                       winWarningLevel="4" generateManifest="1"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="2" targetName="SpectralDelayPlugin"
+                       winWarningLevel="4" generateManifest="1"/>
+      </CONFIGURATIONS>
+    </VS2005>
+    <VS2008 targetFolder="Builds/VisualStudio2008" libraryType="1" juceFolder="..\..\DEV Libraries\JUCE"
+            vstFolder="c:\DEV Libraries\vstsdk2.4">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="SpectralDelayPlugin"
+                       winWarningLevel="4" generateManifest="1"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="2" targetName="SpectralDelayPlugin"
+                       winWarningLevel="4" generateManifest="1"/>
+      </CONFIGURATIONS>
+    </VS2008>
+    <VS2010 targetFolder="Builds/VisualStudio2010" libraryType="1" juceFolder="..\..\DEV Libraries\JUCE"
+            vstFolder="c:\DEV Libraries\vstsdk2.4">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="SpectralDelayPlugin"
+                       winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       headerPath="C:\DEV Libraries\fftw-3.3.2-dll32;C:\DEV\CircularBuffer;C:\DEV\FFTfilter\Source"
+                       libraryPath="C:\DEV Libraries\fftw-3.3.2-dll32;"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="2" targetName="SpectralDelayPlugin"
+                       winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"/>
+      </CONFIGURATIONS>
+    </VS2010>
+  </EXPORTFORMATS>
+  <MAINGROUP id="CfbtrG" name="SpectralDelayPlugin">
+    <GROUP id="{53AC41F5-2F2F-B3A7-C65D-3146D827658D}" name="Headers">
+      <FILE id="qqZ5od" name="FilterCoeffs.h" compile="0" resource="0" file="Source/FilterCoeffs.h"/>
+      <FILE id="Ko4DNW" name="CircularBuffer.h" compile="0" resource="0"
+            file="../CircularBuffer/CircularBuffer.h"/>
+      <FILE id="pRlaiG" name="FFTfilter.h" compile="0" resource="0" file="../FFTfilter/Source/FFTfilter.h"/>
+      <FILE id="cyKvsG" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="MLEkr" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="GWhtzw" name="fftw3.h" compile="0" resource="0" file="../../DEV Libraries/fftw-3.3.2-dll32/fftw3.h"/>
+    </GROUP>
+    <GROUP id="NcHPa2" name="Source">
+      <FILE id="nIMATh" name="FFTfilter.cpp" compile="1" resource="0" file="../FFTfilter/Source/FFTfilter.cpp"/>
+      <FILE id="dB2BA" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="Cj79ZH" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1"/>
+    <MODULE id="juce_events" showAllCode="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1"/>
+    <MODULE id="juce_gui_audio" showAllCode="1"/>
+    <MODULE id="juce_audio_basics" showAllCode="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+</JUCERPROJECT>
