@@ -22,6 +22,7 @@ It contains the basic startup code for a Juce application.
 class SpectralDelayPluginAudioProcessor  : public AudioProcessor
 {
 public:
+	static const int maxTimeDelayInMs = 2000;
 	//==============================================================================
 	SpectralDelayPluginAudioProcessor();
 	~SpectralDelayPluginAudioProcessor();
@@ -61,25 +62,47 @@ public:
 	void setCurrentProgram (int index);
 	const String getProgramName (int index);
 	void changeProgramName (int index, const String& newName);
+	void reset(void);
 
 	//==============================================================================
 	void getStateInformation (MemoryBlock& destData);
 	void setStateInformation (const void* data, int sizeInBytes);
 
+	//==============================================================================
+	//Helper and accessor methods
+	int getMaxSampleDelay(void)
+	{
+		return maxSampleDelay;
+	};
+
+	int getDelayAmount(int index)
+	{
+		return delayAmounts[index];
+	};
+
+	enum Paramters
+	{
+		f0_delayParam = 0,
+		f1_delayParam,
+		f2_delayParam,
+		f3_delayParam,
+		f4_delayParam,
+		totalNumParams
+	};
+
 private:
 	//==============================================================================
 	int N;
-	//int Fs = 44100;
-	//delay line length/max delay in samples
-	int maxDelay;
+	//delay line length/max delay/individual filter delays in samples
+	int maxSampleDelay;
 	int numFilters;
+	std::vector<int> delayAmounts;
 
 	//vectors are used here as the goal is to evenutally let users give an arbitrary impulse response to be convolved with
 	//vector to hold pointers to filters
 	std::vector<ScopedPointer<FFTfilter>> filterVector;
 	//vector to hold pointers to delay lines
 	std::vector<ScopedPointer<CircularBuffer<double>>> delayLineVector;
-
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpectralDelayPluginAudioProcessor);
 };
 

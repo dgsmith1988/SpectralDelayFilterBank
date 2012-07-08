@@ -20,12 +20,19 @@ SpectralDelayPluginAudioProcessor::SpectralDelayPluginAudioProcessor()
 	numFilters = 5;
 	filterVector.resize(numFilters);
 	delayLineVector.resize(numFilters);
+	delayAmounts.resize(numFilters);
 	//create filter objects and store them in the filter vector and create delay lines and store them in the delaylineVector
 	for(int i = 0; i < numFilters; ++i)
 	{
 		filterVector[i] = new FFTfilter(filters_real[i], filters_imag[i], filter_orders[i], N);
 		delayLineVector[i] = new CircularBuffer<double>();
 	}
+
+	delayAmounts[0] = 0 + phase_offsets[0];
+	delayAmounts[1] = 8820 + phase_offsets[1];
+	delayAmounts[2] = 11025 + phase_offsets[2];
+	delayAmounts[3] = 12128 + phase_offsets[3];
+	delayAmounts[4] = 13230 + phase_offsets[4];
 }
 
 SpectralDelayPluginAudioProcessor::~SpectralDelayPluginAudioProcessor()
@@ -40,26 +47,77 @@ const String SpectralDelayPluginAudioProcessor::getName() const
 
 int SpectralDelayPluginAudioProcessor::getNumParameters()
 {
-	return 0;
+	return totalNumParams;
 }
 
 float SpectralDelayPluginAudioProcessor::getParameter (int index)
 {
-	return 0.0f;
+	//as parameters are expected to be floats in the range from 0.0 - 1.0, map the values in delayAmounts (stored as delay in samples) to this range
+	switch(index)
+	{
+	case f0_delayParam:
+		return static_cast<float>(delayAmounts[1]) / maxSampleDelay;
+	case f1_delayParam:
+		return static_cast<float>(delayAmounts[1]) / maxSampleDelay;
+	case f2_delayParam:
+		return static_cast<float>(delayAmounts[2]) / maxSampleDelay;
+	case f3_delayParam:
+		return static_cast<float>(delayAmounts[3]) / maxSampleDelay;
+	case f4_delayParam:
+		return static_cast<float>(delayAmounts[4]) / maxSampleDelay;
+	default:
+		return 0.0f;
+	}
 }
 
 void SpectralDelayPluginAudioProcessor::setParameter (int index, float newValue)
 {
+	//as newValue is in the range from 0 - 1.0 it needs to be mapped to 0 - maxSampleDelay and stored as an int as it corresponds to delay in samples keeping in mind the delay buffers begin indexing at 0	
+	int mappedValue = newValue * maxSampleDelay - 1;	
+	switch(index)
+	{
+	case f0_delayParam:
+		delayAmounts[0] = mappedValue;
+		break;
+	case f1_delayParam:
+		delayAmounts[1] = mappedValue;
+		break;
+	case f2_delayParam:
+		delayAmounts[2] = mappedValue;
+		break;
+	case f3_delayParam:
+		delayAmounts[3] = mappedValue;
+		break;
+	case f4_delayParam:
+		delayAmounts[4] = mappedValue;
+		break;
+	default:
+		break;
+	}
 }
 
 const String SpectralDelayPluginAudioProcessor::getParameterName (int index)
 {
-	return String::empty;
+	switch(index)
+	{
+	case f0_delayParam:
+		return "Filter 0 delay";
+	case f1_delayParam:
+		return "Filter 1 delay";
+	case f2_delayParam:
+		return "Filter 2 delay";
+	case f3_delayParam:
+		return "Filter 3 delay";
+	case f4_delayParam:
+		return "Filter 4 delay";
+	default:
+		return String::empty;
+	}
 }
 
 const String SpectralDelayPluginAudioProcessor::getParameterText (int index)
 {
-	return String::empty;
+	return String(getParameter(index), 2);
 }
 
 const String SpectralDelayPluginAudioProcessor::getInputChannelName (int channelIndex) const
@@ -128,15 +186,14 @@ void SpectralDelayPluginAudioProcessor::prepareToPlay (double sampleRate, int sa
 {
 	// Use this method as the place to do any pre-playback
 	// initialisation that you need..
-	maxDelay = sampleRate*2;
+	maxSampleDelay = sampleRate*2;
 
 	//resize and clear delay lines
 	for(int i = 0; i < numFilters; ++i)
 	{
-		//ScopedPointer<CircularBuffer<double>> currentDelayLine = delayLineVector[i];
 		CircularBuffer<double>& currentDelayLine = *(delayLineVector[i]);
-		currentDelayLine.changeSize(maxDelay + phase_offsets[i]);
-		for(int j = 0; j < maxDelay + phase_offsets[i]; ++j)
+		currentDelayLine.changeSize(maxSampleDelay + phase_offsets[i]);
+		for(int j = 0; j < maxSampleDelay + phase_offsets[i]; ++j)
 		{
 			currentDelayLine[j] = 0.0;
 		}
@@ -209,9 +266,23 @@ void SpectralDelayPluginAudioProcessor::setStateInformation (const void* data, i
 	// whose contents will have been created by the getStateInformation() call.
 }
 
+void SpectralDelayPluginAudioProcessor::reset()
+{
+	// Use this method as the place to clear any delay lines, buffers, etc, as it
+    // means there's been a break in the audio's continuity.
+	for(int i = 0; i < numFilters; ++i)
+	{
+		FFTfilter& currentFilter = *(filterVector[i]);
+		CircularBuffer<double> currentBuffer = *(delayLineVector[i]);
+		currentFilter.clearBuffer();
+		currentBuffer.clearContents();
+	}
+}
+
 //==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
 	return new SpectralDelayPluginAudioProcessor();
 }
+
